@@ -126,23 +126,21 @@ export function ServiceDetailScreen({ serviceId }: { serviceId: string }) {
         className="min-h-0 flex-1 overflow-y-auto no-scrollbar"
         onScroll={(event) => setY(event.currentTarget.scrollTop)}
       >
-        <div className="relative h-[220px] overflow-hidden">
+        <div className="relative h-[148px] overflow-hidden">
           <img
             src={`${import.meta.env.BASE_URL}images/${service.image}`}
             alt={service.name}
-            className="absolute inset-0 h-[120%] w-full object-cover"
-            style={{ transform: `translateY(${Math.min(y, 180) * 0.35}px)` }}
+            className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
+            style={{ transform: `translateY(${Math.min(y, 120) * 0.25}px)` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
         </div>
-        <div className="-mt-6 rounded-t-[24px] bg-background px-5 pb-8 pt-5">
+        <div className="bg-background px-5 pb-6 pt-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[13px] font-semibold text-sky">{service.category}</span>
             {service.popular && <PopularBadge />}
           </div>
-          <h1 className="mt-1 text-[28px] font-bold leading-tight">{service.name}</h1>
           <p className="mt-2 text-[17px] leading-relaxed text-muted-foreground">{service.tagline}</p>
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             <Chip icon={<Clock size={14} />} label={`${service.minutes} min`} />
             <Chip icon={<MapPin size={14} />} label="In-Office" />
             <Chip icon={<Phone size={14} />} label="Phone" />
@@ -151,7 +149,7 @@ export function ServiceDetailScreen({ serviceId }: { serviceId: string }) {
           </div>
           <p className="mt-3 text-[13px] text-muted-foreground">{feeNote}</p>
 
-          <h2 className="mt-8 text-[22px] font-semibold">Overview</h2>
+          <h2 className="mt-5 text-[22px] font-semibold">Overview</h2>
           {service.overview.map((paragraph) => (
             <p key={paragraph.slice(0, 24)} className="mt-3 text-[17px] leading-relaxed text-muted-foreground">
               {paragraph}
@@ -225,7 +223,7 @@ export function ServiceDetailScreen({ serviceId }: { serviceId: string }) {
           <p className="mt-6 text-[13px] leading-relaxed text-muted-foreground">{privacyNote}</p>
         </div>
       </div>
-      <div className="shrink-0 border-t border-divider bg-background px-5 py-3">
+      <div className="shrink-0 border-t border-divider bg-background px-5 pt-3 pb-[max(12px,env(safe-area-inset-bottom))]">
         <Button
           onClick={() => {
             beginBooking(service.id);

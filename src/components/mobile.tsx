@@ -419,22 +419,22 @@ export function NavBar({
       )}
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
-      <div className="relative flex h-11 items-center">
+      <div className="grid h-11 grid-cols-[5.75rem_minmax(0,1fr)_5.75rem] items-center">
         {back ? (
           <button
             type="button"
             aria-label="Back"
             onClick={handleBack}
-            className="relative z-10 flex h-11 items-center gap-0.5 pl-1 pr-3 text-[17px] font-medium text-primary"
+            className="flex h-11 items-center gap-0.5 pl-1 text-[17px] font-medium text-primary"
           >
             <ChevronLeft size={26} strokeWidth={2.4} />
             Back
           </button>
         ) : (
-          <span className="w-11" />
+          <span />
         )}
-        <h1 className="pointer-events-none absolute inset-x-20 truncate text-center text-[17px] font-semibold">{title}</h1>
-        <div className="relative z-10 ml-auto flex min-w-11 items-center justify-end pr-2">{right}</div>
+        <h1 className="truncate text-center text-[17px] font-semibold">{title}</h1>
+        <div className="flex items-center justify-end pr-2">{right}</div>
       </div>
     </header>
   );
