@@ -38,7 +38,7 @@ export function AppointmentsScreen() {
       title: service?.name ?? "Appointment",
       content: (
         <div className="space-y-2 pb-2">
-          <Button onClick={() => { closeSheet(); navigate({ to: "/appointments/$appointmentId", params: { appointmentId: appointment.id } }); }}>View Details</Button>
+          <Button onClick={() => { closeSheet(); navigate({ to: "/appointments/$appointmentId", params: { appointmentId: appointment.id }, search: { reschedule: "" } }); }}>View Details</Button>
           {appointment.status === "confirmed" && (
             <Button variant="secondary" onClick={() => { closeSheet(); navigate({ to: "/appointments/$appointmentId", params: { appointmentId: appointment.id }, search: { reschedule: "1" } }); }}>Reschedule</Button>
           )}
@@ -138,9 +138,19 @@ export function AppointmentsScreen() {
                   event.preventDefault();
                   openActions(appointment);
                 }}
+                onTouchStart={(event) => {
+                  (event.currentTarget as HTMLElement).dataset.x = String(event.touches[0].clientX);
+                }}
+                onTouchEnd={(event) => {
+                  const start = Number((event.currentTarget as HTMLElement).dataset.x || 0);
+                  const delta = event.changedTouches[0].clientX - start;
+                  if (appointment.status !== "confirmed") return;
+                  if (delta < -70) askCancel(appointment);
+                  if (delta > 70) navigate({ to: "/appointments/$appointmentId", params: { appointmentId: appointment.id }, search: { reschedule: "1" } });
+                }}
                 className="rounded-[20px] bg-card p-4 shadow-card"
               >
-                <button type="button" className="w-full text-left" onClick={() => navigate({ to: "/appointments/$appointmentId", params: { appointmentId: appointment.id } })}>
+                <button type="button" className="w-full text-left" onClick={() => navigate({ to: "/appointments/$appointmentId", params: { appointmentId: appointment.id }, search: { reschedule: "" } })}>
                   <span className="flex items-start justify-between gap-3">
                     <span className="text-[17px] font-semibold leading-snug">{service?.name}</span>
                     <StatusBadge status={appointment.status} />

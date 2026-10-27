@@ -84,14 +84,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "viewport",
         content: "width=device-width, initial-scale=1, viewport-fit=cover",
       },
-      { title: "Mobile App Starter" },
+      { title: "KJ Gilbertson CPA" },
       {
         name: "description",
-        content: "Clean mobile app starter. This is the starting point for a new project.",
+        content: "Book tax and accounting appointments with KJ Gilbertson CPA LLC in Las Vegas.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "theme-color", content: "#f7f7f8" },
+      { name: "theme-color", content: "#4C419A" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -110,6 +110,11 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var p=JSON.parse(localStorage.getItem("kjg-cpa-v1")||"{}");var a=p.appearance||"system";var d=a==="dark"||(a==="system"&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);document.documentElement.classList.toggle("light",a==="light");}catch(e){}`,
+          }}
+        />
       </head>
       <body>
         {children}

@@ -11,9 +11,15 @@ let warmed = false;
 export function ServicesScreen({ initialQuery = "" }: { initialQuery?: string }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState(initialQuery);
+  useEffect(() => {
+    setQuery(initialQuery);
+  }, [initialQuery]);
   const [category, setCategory] = useState<(typeof categories)[number]>("All");
   const [loading, setLoading] = useState(!warmed);
   const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    if (!navigator.onLine) setFailed(true);
+  }, []);
 
   useEffect(() => {
     if (warmed) return;

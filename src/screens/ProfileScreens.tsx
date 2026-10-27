@@ -212,6 +212,7 @@ export function NotificationsScreen() {
 
 export function DocumentsScreen() {
   const { documents, addDocument, removeDocument, user } = useApp();
+  const mine = documents.filter((doc) => doc.userId === user?.id);
   const navigate = useNavigate();
   return (
     <Page title="My Documents" back>
@@ -227,8 +228,8 @@ export function DocumentsScreen() {
           </label>
         )}
         <div className="overflow-hidden rounded-[16px] bg-card shadow-card">
-          {documents.length === 0 && <p className="p-4 text-[15px] text-muted-foreground">No documents yet.</p>}
-          {documents.map((doc) => (
+          {mine.length === 0 && <p className="p-4 text-[15px] text-muted-foreground">No documents yet.</p>}
+          {mine.map((doc) => (
             <div key={doc.id} className="flex min-h-[52px] items-center gap-3 border-t border-divider px-4 first:border-t-0">
               <FileText className="text-sky" size={18} />
               <span className="min-w-0 flex-1">

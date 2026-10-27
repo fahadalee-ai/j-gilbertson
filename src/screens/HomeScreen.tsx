@@ -75,7 +75,7 @@ export function HomeScreen() {
       <div className="mt-4 px-5">
         <div className="relative overflow-hidden rounded-[20px] bg-[linear-gradient(105deg,#4C419A_0%,#4C419A_58%,#2EB4E8_100%)] p-5 text-white shadow-card">
           <Photo src="office-hero.jpg" alt="" className="pointer-events-none absolute inset-y-0 right-0 h-full w-[46%] opacity-70 [mask-image:linear-gradient(90deg,transparent,#000_55%)]" />
-          <div className="relative max-w-[70%]">
+          <div className="relative max-w-[62%]">
             <p className="text-[12px] font-semibold uppercase tracking-wide text-white/80">Free intro</p>
             <h2 className="mt-1 text-[22px] font-semibold leading-tight">Book a Free 15-Minute Intro Call</h2>
             <p className="mt-2 text-[15px] leading-relaxed text-white/90">Tell us what you need. We will point you to the right service. No fee for this call.</p>
@@ -137,7 +137,7 @@ export function HomeScreen() {
               <span className="rounded-full bg-[color-mix(in_srgb,var(--success)_18%,transparent)] px-2.5 py-1 text-[13px] font-semibold text-[var(--success-ink)]">Confirmed</span>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <Button variant="secondary" onClick={() => navigate({ to: "/appointments/$appointmentId", params: { appointmentId: upcoming.id } })}>View Details</Button>
+              <Button variant="secondary" onClick={() => navigate({ to: "/appointments/$appointmentId", params: { appointmentId: upcoming.id }, search: { reschedule: "" } })}>View Details</Button>
               <Button onClick={() => navigate({ to: "/appointments/$appointmentId", params: { appointmentId: upcoming.id }, search: { reschedule: "1" } })}>Reschedule</Button>
             </div>
           </Card>
@@ -259,7 +259,7 @@ export function HomeScreen() {
       </section>
 
       <section className="mt-7 px-5">
-        <Card className="bg-[linear-gradient(135deg,#4C419A,#3d78c4)] p-5 text-white">
+        <Card className="bg-primary p-5 text-white">
           <p className="text-[22px] font-semibold leading-tight">Ready to get started?</p>
           <p className="mt-2 text-[15px] leading-relaxed text-white/90">{privacyNote}</p>
           <button type="button" onClick={() => { beginBooking(); navigate({ to: "/book" }); }} className="mt-4 min-h-[52px] w-full rounded-[14px] bg-white text-[17px] font-semibold text-[#1C1B2E]">

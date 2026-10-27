@@ -10,33 +10,328 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as ForgotRouteImport } from './routes/forgot'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as VerifyRouteImport } from './routes/verify'
+import { Route as WelcomeRouteImport } from './routes/welcome'
+import { Route as AppBookRouteImport } from './routes/_app/book'
+import { Route as AppHomeRouteImport } from './routes/_app/home'
+import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
+import { Route as AppAppointmentsIndexRouteImport } from './routes/_app/appointments/index'
+import { Route as AppAppointmentsAppointmentIdRouteImport } from './routes/_app/appointments/$appointmentId'
+import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index'
+import { Route as AppProfileAboutRouteImport } from './routes/_app/profile/about'
+import { Route as AppProfileContactRouteImport } from './routes/_app/profile/contact'
+import { Route as AppProfileDocumentsRouteImport } from './routes/_app/profile/documents'
+import { Route as AppProfileEditRouteImport } from './routes/_app/profile/edit'
+import { Route as AppProfileFaqsRouteImport } from './routes/_app/profile/faqs'
+import { Route as AppProfilePrivacyRouteImport } from './routes/_app/profile/privacy'
+import { Route as AppProfileRemindersRouteImport } from './routes/_app/profile/reminders'
+import { Route as AppProfileSettingsRouteImport } from './routes/_app/profile/settings'
+import { Route as AppProfileTermsRouteImport } from './routes/_app/profile/terms'
+import { Route as AppServicesIndexRouteImport } from './routes/_app/services/index'
+import { Route as AppServicesServiceIdRouteImport } from './routes/_app/services/$serviceId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotRoute = ForgotRouteImport.update({
+  id: '/forgot',
+  path: '/forgot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppBookRoute = AppBookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppHomeRoute = AppHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppAppointmentsIndexRoute = AppAppointmentsIndexRouteImport.update({
+  id: '/appointments/',
+  path: '/appointments/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppAppointmentsAppointmentIdRoute =
+  AppAppointmentsAppointmentIdRouteImport.update({
+    id: '/appointments/$appointmentId',
+    path: '/appointments/$appointmentId',
+    getParentRoute: () => AppRouteRoute,
+  } as any)
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileAboutRoute = AppProfileAboutRouteImport.update({
+  id: '/profile/about',
+  path: '/profile/about',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileContactRoute = AppProfileContactRouteImport.update({
+  id: '/profile/contact',
+  path: '/profile/contact',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileDocumentsRoute = AppProfileDocumentsRouteImport.update({
+  id: '/profile/documents',
+  path: '/profile/documents',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileEditRoute = AppProfileEditRouteImport.update({
+  id: '/profile/edit',
+  path: '/profile/edit',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileFaqsRoute = AppProfileFaqsRouteImport.update({
+  id: '/profile/faqs',
+  path: '/profile/faqs',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfilePrivacyRoute = AppProfilePrivacyRouteImport.update({
+  id: '/profile/privacy',
+  path: '/profile/privacy',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileRemindersRoute = AppProfileRemindersRouteImport.update({
+  id: '/profile/reminders',
+  path: '/profile/reminders',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileSettingsRoute = AppProfileSettingsRouteImport.update({
+  id: '/profile/settings',
+  path: '/profile/settings',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileTermsRoute = AppProfileTermsRouteImport.update({
+  id: '/profile/terms',
+  path: '/profile/terms',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppServicesIndexRoute = AppServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppServicesServiceIdRoute = AppServicesServiceIdRouteImport.update({
+  id: '/services/$serviceId',
+  path: '/services/$serviceId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot': typeof ForgotRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/register': typeof RegisterRoute
+  '/verify': typeof VerifyRoute
+  '/welcome': typeof WelcomeRoute
+  '/book': typeof AppBookRoute
+  '/home': typeof AppHomeRoute
+  '/notifications': typeof AppNotificationsRoute
+  '/appointments/$appointmentId': typeof AppAppointmentsAppointmentIdRoute
+  '/profile/about': typeof AppProfileAboutRoute
+  '/profile/contact': typeof AppProfileContactRoute
+  '/profile/documents': typeof AppProfileDocumentsRoute
+  '/profile/edit': typeof AppProfileEditRoute
+  '/profile/faqs': typeof AppProfileFaqsRoute
+  '/profile/privacy': typeof AppProfilePrivacyRoute
+  '/profile/reminders': typeof AppProfileRemindersRoute
+  '/profile/settings': typeof AppProfileSettingsRoute
+  '/profile/terms': typeof AppProfileTermsRoute
+  '/services/$serviceId': typeof AppServicesServiceIdRoute
+  '/appointments/': typeof AppAppointmentsIndexRoute
+  '/profile/': typeof AppProfileIndexRoute
+  '/services/': typeof AppServicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot': typeof ForgotRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/register': typeof RegisterRoute
+  '/verify': typeof VerifyRoute
+  '/welcome': typeof WelcomeRoute
+  '/book': typeof AppBookRoute
+  '/home': typeof AppHomeRoute
+  '/notifications': typeof AppNotificationsRoute
+  '/appointments/$appointmentId': typeof AppAppointmentsAppointmentIdRoute
+  '/profile/about': typeof AppProfileAboutRoute
+  '/profile/contact': typeof AppProfileContactRoute
+  '/profile/documents': typeof AppProfileDocumentsRoute
+  '/profile/edit': typeof AppProfileEditRoute
+  '/profile/faqs': typeof AppProfileFaqsRoute
+  '/profile/privacy': typeof AppProfilePrivacyRoute
+  '/profile/reminders': typeof AppProfileRemindersRoute
+  '/profile/settings': typeof AppProfileSettingsRoute
+  '/profile/terms': typeof AppProfileTermsRoute
+  '/services/$serviceId': typeof AppServicesServiceIdRoute
+  '/appointments': typeof AppAppointmentsIndexRoute
+  '/profile': typeof AppProfileIndexRoute
+  '/services': typeof AppServicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteRouteWithChildren
+  '/forgot': typeof ForgotRoute
+  '/login': typeof LoginRoute
+  '/onboarding': typeof OnboardingRoute
+  '/register': typeof RegisterRoute
+  '/verify': typeof VerifyRoute
+  '/welcome': typeof WelcomeRoute
+  '/_app/book': typeof AppBookRoute
+  '/_app/home': typeof AppHomeRoute
+  '/_app/notifications': typeof AppNotificationsRoute
+  '/_app/appointments/$appointmentId': typeof AppAppointmentsAppointmentIdRoute
+  '/_app/profile/about': typeof AppProfileAboutRoute
+  '/_app/profile/contact': typeof AppProfileContactRoute
+  '/_app/profile/documents': typeof AppProfileDocumentsRoute
+  '/_app/profile/edit': typeof AppProfileEditRoute
+  '/_app/profile/faqs': typeof AppProfileFaqsRoute
+  '/_app/profile/privacy': typeof AppProfilePrivacyRoute
+  '/_app/profile/reminders': typeof AppProfileRemindersRoute
+  '/_app/profile/settings': typeof AppProfileSettingsRoute
+  '/_app/profile/terms': typeof AppProfileTermsRoute
+  '/_app/services/$serviceId': typeof AppServicesServiceIdRoute
+  '/_app/appointments/': typeof AppAppointmentsIndexRoute
+  '/_app/profile/': typeof AppProfileIndexRoute
+  '/_app/services/': typeof AppServicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/forgot'
+    | '/login'
+    | '/onboarding'
+    | '/register'
+    | '/verify'
+    | '/welcome'
+    | '/book'
+    | '/home'
+    | '/notifications'
+    | '/appointments/$appointmentId'
+    | '/profile/about'
+    | '/profile/contact'
+    | '/profile/documents'
+    | '/profile/edit'
+    | '/profile/faqs'
+    | '/profile/privacy'
+    | '/profile/reminders'
+    | '/profile/settings'
+    | '/profile/terms'
+    | '/services/$serviceId'
+    | '/appointments/'
+    | '/profile/'
+    | '/services/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/forgot'
+    | '/login'
+    | '/onboarding'
+    | '/register'
+    | '/verify'
+    | '/welcome'
+    | '/book'
+    | '/home'
+    | '/notifications'
+    | '/appointments/$appointmentId'
+    | '/profile/about'
+    | '/profile/contact'
+    | '/profile/documents'
+    | '/profile/edit'
+    | '/profile/faqs'
+    | '/profile/privacy'
+    | '/profile/reminders'
+    | '/profile/settings'
+    | '/profile/terms'
+    | '/services/$serviceId'
+    | '/appointments'
+    | '/profile'
+    | '/services'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/forgot'
+    | '/login'
+    | '/onboarding'
+    | '/register'
+    | '/verify'
+    | '/welcome'
+    | '/_app/book'
+    | '/_app/home'
+    | '/_app/notifications'
+    | '/_app/appointments/$appointmentId'
+    | '/_app/profile/about'
+    | '/_app/profile/contact'
+    | '/_app/profile/documents'
+    | '/_app/profile/edit'
+    | '/_app/profile/faqs'
+    | '/_app/profile/privacy'
+    | '/_app/profile/reminders'
+    | '/_app/profile/settings'
+    | '/_app/profile/terms'
+    | '/_app/services/$serviceId'
+    | '/_app/appointments/'
+    | '/_app/profile/'
+    | '/_app/services/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
+  ForgotRoute: typeof ForgotRoute
+  LoginRoute: typeof LoginRoute
+  OnboardingRoute: typeof OnboardingRoute
+  RegisterRoute: typeof RegisterRoute
+  VerifyRoute: typeof VerifyRoute
+  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +343,230 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot': {
+      id: '/forgot'
+      path: '/forgot'
+      fullPath: '/forgot'
+      preLoaderRoute: typeof ForgotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/book': {
+      id: '/_app/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof AppBookRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/home': {
+      id: '/_app/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AppHomeRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/appointments/': {
+      id: '/_app/appointments/'
+      path: '/appointments'
+      fullPath: '/appointments/'
+      preLoaderRoute: typeof AppAppointmentsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/appointments/$appointmentId': {
+      id: '/_app/appointments/$appointmentId'
+      path: '/appointments/$appointmentId'
+      fullPath: '/appointments/$appointmentId'
+      preLoaderRoute: typeof AppAppointmentsAppointmentIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/': {
+      id: '/_app/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/about': {
+      id: '/_app/profile/about'
+      path: '/profile/about'
+      fullPath: '/profile/about'
+      preLoaderRoute: typeof AppProfileAboutRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/contact': {
+      id: '/_app/profile/contact'
+      path: '/profile/contact'
+      fullPath: '/profile/contact'
+      preLoaderRoute: typeof AppProfileContactRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/documents': {
+      id: '/_app/profile/documents'
+      path: '/profile/documents'
+      fullPath: '/profile/documents'
+      preLoaderRoute: typeof AppProfileDocumentsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/edit': {
+      id: '/_app/profile/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof AppProfileEditRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/faqs': {
+      id: '/_app/profile/faqs'
+      path: '/profile/faqs'
+      fullPath: '/profile/faqs'
+      preLoaderRoute: typeof AppProfileFaqsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/privacy': {
+      id: '/_app/profile/privacy'
+      path: '/profile/privacy'
+      fullPath: '/profile/privacy'
+      preLoaderRoute: typeof AppProfilePrivacyRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/reminders': {
+      id: '/_app/profile/reminders'
+      path: '/profile/reminders'
+      fullPath: '/profile/reminders'
+      preLoaderRoute: typeof AppProfileRemindersRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/settings': {
+      id: '/_app/profile/settings'
+      path: '/profile/settings'
+      fullPath: '/profile/settings'
+      preLoaderRoute: typeof AppProfileSettingsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/profile/terms': {
+      id: '/_app/profile/terms'
+      path: '/profile/terms'
+      fullPath: '/profile/terms'
+      preLoaderRoute: typeof AppProfileTermsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/services/': {
+      id: '/_app/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof AppServicesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/services/$serviceId': {
+      id: '/_app/services/$serviceId'
+      path: '/services/$serviceId'
+      fullPath: '/services/$serviceId'
+      preLoaderRoute: typeof AppServicesServiceIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
   }
 }
 
+interface AppRouteRouteChildren {
+  AppBookRoute: typeof AppBookRoute
+  AppHomeRoute: typeof AppHomeRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
+  AppAppointmentsAppointmentIdRoute: typeof AppAppointmentsAppointmentIdRoute
+  AppProfileAboutRoute: typeof AppProfileAboutRoute
+  AppProfileContactRoute: typeof AppProfileContactRoute
+  AppProfileDocumentsRoute: typeof AppProfileDocumentsRoute
+  AppProfileEditRoute: typeof AppProfileEditRoute
+  AppProfileFaqsRoute: typeof AppProfileFaqsRoute
+  AppProfilePrivacyRoute: typeof AppProfilePrivacyRoute
+  AppProfileRemindersRoute: typeof AppProfileRemindersRoute
+  AppProfileSettingsRoute: typeof AppProfileSettingsRoute
+  AppProfileTermsRoute: typeof AppProfileTermsRoute
+  AppServicesServiceIdRoute: typeof AppServicesServiceIdRoute
+  AppAppointmentsIndexRoute: typeof AppAppointmentsIndexRoute
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
+  AppServicesIndexRoute: typeof AppServicesIndexRoute
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppBookRoute: AppBookRoute,
+  AppHomeRoute: AppHomeRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
+  AppAppointmentsAppointmentIdRoute: AppAppointmentsAppointmentIdRoute,
+  AppProfileAboutRoute: AppProfileAboutRoute,
+  AppProfileContactRoute: AppProfileContactRoute,
+  AppProfileDocumentsRoute: AppProfileDocumentsRoute,
+  AppProfileEditRoute: AppProfileEditRoute,
+  AppProfileFaqsRoute: AppProfileFaqsRoute,
+  AppProfilePrivacyRoute: AppProfilePrivacyRoute,
+  AppProfileRemindersRoute: AppProfileRemindersRoute,
+  AppProfileSettingsRoute: AppProfileSettingsRoute,
+  AppProfileTermsRoute: AppProfileTermsRoute,
+  AppServicesServiceIdRoute: AppServicesServiceIdRoute,
+  AppAppointmentsIndexRoute: AppAppointmentsIndexRoute,
+  AppProfileIndexRoute: AppProfileIndexRoute,
+  AppServicesIndexRoute: AppServicesIndexRoute,
+}
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
+  ForgotRoute: ForgotRoute,
+  LoginRoute: LoginRoute,
+  OnboardingRoute: OnboardingRoute,
+  RegisterRoute: RegisterRoute,
+  VerifyRoute: VerifyRoute,
+  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

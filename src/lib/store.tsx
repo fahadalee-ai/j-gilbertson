@@ -19,7 +19,7 @@ export type User = {
 
 export type ApptStatus = "confirmed" | "pending" | "cancelled" | "completed";
 
-export type Doc = { id: string; name: string; kind: string; added: string };
+export type Doc = { id: string; name: string; kind: string; added: string; userId?: string };
 
 export type Appointment = {
   id: string;
@@ -221,8 +221,8 @@ function initialPersisted(): Persisted {
     prefs: { appointments: true, reminders: true, deadlines: true, email: true, push: true },
     appointments: seedAppointments(now),
     documents: [
-      { id: "doc-organizer", name: "2025 organizer notes.pdf", kind: "PDF", added: isoDate(addDays(now, -12)) },
-      { id: "doc-receipt", name: "Equipment receipt.jpg", kind: "Image", added: isoDate(addDays(now, -4)) },
+      { id: "doc-organizer", userId: alex.id, name: "2025 organizer notes.pdf", kind: "PDF", added: isoDate(addDays(now, -12)) },
+      { id: "doc-receipt", userId: alex.id, name: "Equipment receipt.jpg", kind: "Image", added: isoDate(addDays(now, -4)) },
     ],
     notices: seedNotices(now),
     reminders: [],
@@ -492,7 +492,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         });
       },
       addDocument: (name) => {
-        const doc = { id: `doc-${Date.now()}`, name, kind: fileKind(name), added: isoDate(new Date()) };
+        const doc = { id: `doc-${Date.now()}`, userId: user?.id, name, kind: fileKind(name), added: isoDate(new Date()) };
         patch({ documents: [doc, ...data.documents] });
       },
       removeDocument: (id) => patch({ documents: data.documents.filter((item) => item.id !== id) }),

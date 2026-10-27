@@ -151,7 +151,7 @@ export function LoginScreen() {
 
 export function RegisterScreen() {
   const navigate = useNavigate();
-  const { register, openSheet } = useRegisterSheet();
+  const { register, openSheet: openClientSheet, openLegal } = useRegisterSheet();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -215,7 +215,7 @@ export function RegisterScreen() {
         <Field label="Confirm password" type="password" value={form.confirm} onChange={(value) => set("confirm", value)} error={errors.confirm} autoComplete="new-password" />
         <button
           type="button"
-          onClick={() => openSheet(form.clientType, (value) => set("clientType", value))}
+          onClick={() => openClientSheet(form.clientType, (value) => set("clientType", value))}
           className="flex min-h-[52px] w-full items-center justify-between rounded-[14px] border border-divider bg-card px-4 text-left"
         >
           <span>
@@ -227,11 +227,11 @@ export function RegisterScreen() {
           <input type="checkbox" checked={form.agree} onChange={(event) => set("agree", event.target.checked)} className="mt-1 h-5 w-5 accent-[#4C419A]" />
           <span>
             I agree to the{" "}
-            <button type="button" className="font-semibold text-primary" onClick={() => navigate({ to: "/profile/terms" })}>
+            <button type="button" className="font-semibold text-primary" onClick={() => openLegal("terms")}>
               Terms of Service
             </button>{" "}
             and{" "}
-            <button type="button" className="font-semibold text-primary" onClick={() => navigate({ to: "/profile/privacy" })}>
+            <button type="button" className="font-semibold text-primary" onClick={() => openLegal("privacy")}>
               Privacy Policy
             </button>
             .
@@ -255,6 +255,16 @@ function useRegisterSheet() {
   const { openSheet, closeSheet } = useOverlay();
   return {
     register,
+    openLegal: (kind: "privacy" | "terms") => {
+      openSheet({
+        title: kind === "privacy" ? "Privacy Policy" : "Terms of Service",
+        content: (
+          <div className="max-h-[60vh] overflow-y-auto pb-4">
+            <LegalBody kind={kind} />
+          </div>
+        ),
+      });
+    },
     openSheet: (current: ClientType, onPick: (value: ClientType) => void) => {
       const options: ClientType[] = ["Individual", "Freelancer", "Small Business Owner"];
       openSheet({
