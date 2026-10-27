@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Building2, Check, FileText, Phone, Upload, Video } from "lucide-react";
 import { useState } from "react";
 import { CalendarPicker } from "@/components/CalendarPicker";
-import { Button, CheckMark, Field, Page, SearchField, Segmented, TextArea, Toggle } from "@/components/mobile";
+import { Button, CheckMark, Field, NavBar, Page, SearchField, Segmented, TextArea, Toggle } from "@/components/mobile";
 import { cancellationPolicy, firm, isSlotOpen, meetingOptions, privacyNote, slotGroups, type MeetingType } from "@/lib/content";
 import { fileKind, formatPhone, longDate } from "@/lib/format";
 import { haptic } from "@/lib/haptics";
@@ -14,28 +14,27 @@ const icons = { "in-office": Building2, phone: Phone, video: Video };
 export function BookScreen() {
   const navigate = useNavigate();
   const app = useApp();
-  const { booking, setBooking, confirmBooking, user, setIntent, pushToast } = app;
+  const { booking, setBooking, confirmBooking, pushToast } = app;
   const [query, setQuery] = useState("");
-  const service = booking.serviceId ? getService(booking.serviceId) : undefined;
+  const service = (getService(booking.serviceId ?? "consultation") ?? getService("consultation"))!;
   const step = booking.step;
 
   const go = (next: number) => setBooking({ step: next });
 
   const confirm = () => {
-    if (!user) {
-      setIntent("confirm-booking");
-      pushToast("Sign in to confirm", "Your details are saved. We will bring you back to this step.");
-      navigate({ to: "/login" });
+    const appointment = confirmBooking();
+    if (!appointment) {
+      pushToast("Couldn't confirm", "Choose a service and try again.");
       return;
     }
-    const appointment = confirmBooking();
-    if (!appointment) return;
     haptic("success");
   };
 
   if (step === 6 && service) {
     return (
-      <div className="h-full overflow-y-auto no-scrollbar px-5 pb-8 pt-8">
+      <div className="flex h-full min-h-0 flex-col">
+      <NavBar title="Confirmed" back onBack={() => navigate({ to: "/home" })} />
+      <div className="min-h-0 flex-1 overflow-y-auto no-scrollbar px-5 pb-8 pt-6">
         <CheckMark />
         <h1 className="mt-5 text-center text-[28px] font-bold leading-tight">Your appointment is booked</h1>
         <p className="mt-2 text-center text-[17px] text-muted-foreground">Reference {booking.reference}</p>
@@ -66,6 +65,7 @@ export function BookScreen() {
           <Button variant="ghost" onClick={() => navigate({ to: "/appointments" })}>Go to Appointments</Button>
           <Button variant="ghost" onClick={() => navigate({ to: "/home" })}>Back to Home</Button>
         </div>
+      </div>
       </div>
     );
   }
@@ -252,7 +252,7 @@ export function BookScreen() {
         </div>
       )}
 
-      {step === 5 && service && (
+      {step === 5 && (
         <div className="px-5">
           <h2 className="text-[22px] font-semibold">Review and confirm</h2>
           <div className="mt-3 rounded-[20px] bg-card p-4 shadow-card">
@@ -266,7 +266,6 @@ export function BookScreen() {
             <Toggle checked={booking.reminders} onChange={(reminders) => setBooking({ reminders })} label="Send me reminders" detail="Email and phone notifications about this visit." />
           </div>
           <p className="mt-3 text-[13px] leading-relaxed text-muted-foreground">{cancellationPolicy}</p>
-          {!user && <p className="mt-3 text-[15px] leading-relaxed">You are browsing as a guest. We will ask you to log in or create an account before this visit is confirmed.</p>}
           <div className="mt-5">
             <Button onClick={confirm}>Confirm Appointment</Button>
           </div>

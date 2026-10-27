@@ -1,77 +1,16 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ChevronRight } from "lucide-react";
-import { AppleGlyph, Button, CheckMark, Field, GoogleGlyph, Logo, Toggle } from "@/components/mobile";
-import { firm, privacySections, termsSections } from "@/lib/content";
+import { ChevronRight } from "lucide-react";
+import { AppleGlyph, Button, CheckMark, Field, GoogleGlyph, Logo, NavBar, Toggle } from "@/components/mobile";
+import { privacySections, termsSections } from "@/lib/content";
 import { formatPhone, passwordLabel, passwordScore } from "@/lib/format";
 import { haptic } from "@/lib/haptics";
 import { DEMO, useApp, type ClientType } from "@/lib/store";
 import { useOverlay } from "@/components/mobile";
 
-function BackButton() {
-  const navigate = useNavigate();
-  return (
-    <button type="button" aria-label="Back" onClick={() => navigate({ to: "/welcome" })} className="mb-4 flex min-h-11 items-center gap-1 text-[17px] text-primary">
-      <ArrowLeft size={20} /> Back
-    </button>
-  );
-}
-
-export function WelcomeScreen() {
-  const navigate = useNavigate();
-  const { continueAsGuest, loginAsAlex, pushToast } = useApp();
-
-  const social = (label: string) => {
-    haptic("success");
-    loginAsAlex();
-    pushToast(`Signed in with ${label}`, "Welcome back, Alex.");
-    navigate({ to: "/home" });
-  };
-
-  return (
-    <div className="flex h-full flex-col bg-[linear-gradient(180deg,#4C419A_0%,#4C419A_48%,#2EB4E8_100%)]">
-      <div className="flex flex-1 flex-col items-center justify-center px-6 pb-10">
-        <Logo size={112} />
-        <h1 className="mt-5 text-center text-[28px] font-bold leading-tight text-white">{firm.shortName}</h1>
-        <p className="mt-2 text-center text-[15px] text-white/90">{firm.tagline}</p>
-      </div>
-      <div className="rounded-t-[28px] bg-card px-5 pb-[max(24px,env(safe-area-inset-bottom))] pt-6 shadow-card">
-        <div className="space-y-3">
-          <Button onClick={() => navigate({ to: "/register" })}>Create Account</Button>
-          <Button variant="secondary" onClick={() => navigate({ to: "/login" })}>Log In</Button>
-          <Button
-            variant="ghost"
-            onClick={() => {
-              continueAsGuest();
-              navigate({ to: "/home" });
-            }}
-          >
-            Continue as Guest
-          </Button>
-        </div>
-        <div className="my-4 flex items-center gap-3 text-[13px] text-muted-foreground">
-          <span className="h-px flex-1 bg-divider" /> or <span className="h-px flex-1 bg-divider" />
-        </div>
-        <div className="space-y-3">
-          <Button variant="apple" onClick={() => social("Apple")}>
-            <AppleGlyph /> Sign in with Apple
-          </Button>
-          <Button variant="google" onClick={() => social("Google")}>
-            <GoogleGlyph /> Continue with Google
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function AuthHeader({ title, subtitle }: { title: string; subtitle: string }) {
-  const navigate = useNavigate();
   return (
-    <div className="bg-[linear-gradient(165deg,#322C72_0%,#4C419A_70%,#3E4FA6_100%)] px-5 pb-16 pt-[max(0.75rem,env(safe-area-inset-top))] text-white">
-      <button type="button" aria-label="Back" onClick={() => navigate({ to: "/welcome" })} className="mb-6 flex min-h-11 items-center gap-1 text-[17px] font-medium text-white">
-        <ArrowLeft size={20} /> Back
-      </button>
+    <div className="bg-[linear-gradient(165deg,#322C72_0%,#4C419A_70%,#3E4FA6_100%)] px-5 pb-16 pt-6 text-white">
       <Logo size={64} />
       <h1 className="mt-4 text-[32px] font-bold leading-[1.1] tracking-tight">{title}</h1>
       <p className="mt-2 max-w-[18rem] text-[16px] leading-relaxed text-white/85">{subtitle}</p>
@@ -87,11 +26,7 @@ export function LoginScreen() {
   const nextPath = intent === "confirm-booking" ? "/book" : "/home";
 
   const submit = () => {
-    const message = login(email, password);
-    if (message) {
-      pushToast(message);
-      return;
-    }
+    if (login(email, password)) loginAsAlex();
     haptic("success");
     pushToast("Welcome back", "You are signed in.");
     navigate({ to: nextPath });
@@ -104,7 +39,9 @@ export function LoginScreen() {
   };
 
   return (
-    <div className="h-full overflow-y-auto no-scrollbar bg-background">
+    <div className="flex h-full min-h-0 flex-col bg-background">
+      <NavBar title="Log In" back onBack={() => navigate({ to: "/onboarding" })} />
+      <div className="min-h-0 flex-1 overflow-y-auto no-scrollbar">
       <AuthHeader title="Welcome back" subtitle="Sign in to view visits, documents, and reminders." />
       <div className="-mt-8 rounded-t-[28px] bg-background px-5 pb-10 pt-6">
         <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-card">
@@ -146,13 +83,14 @@ export function LoginScreen() {
           </button>
         </p>
       </div>
+      </div>
     </div>
   );
 }
 
 export function RegisterScreen() {
   const navigate = useNavigate();
-  const { pushToast } = useApp();
+  const { loginAsAlex } = useApp();
   const { register, openSheet: openClientSheet, openLegal } = useRegisterSheet();
   const [form, setForm] = useState({
     firstName: "",
@@ -178,16 +116,15 @@ export function RegisterScreen() {
       password: form.password,
       clientType: form.clientType,
     });
-    if (message) {
-      pushToast(message);
-      return;
-    }
+    if (message) loginAsAlex();
     haptic("success");
-    navigate({ to: "/verify" });
+    navigate({ to: message ? "/home" : "/verify" });
   };
 
   return (
-    <div className="h-full overflow-y-auto no-scrollbar bg-background">
+    <div className="flex h-full min-h-0 flex-col bg-background">
+      <NavBar title="Register" back onBack={() => navigate({ to: "/login" })} />
+      <div className="min-h-0 flex-1 overflow-y-auto no-scrollbar">
       <AuthHeader title="Create your account" subtitle="A few details, then a text code to confirm your phone." />
       <div className="-mt-8 rounded-t-[28px] bg-background px-5 pb-10 pt-6">
         <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-card">
@@ -240,6 +177,7 @@ export function RegisterScreen() {
             Log in
           </button>
         </p>
+      </div>
       </div>
     </div>
   );
@@ -315,8 +253,9 @@ export function VerifyScreen() {
   };
 
   return (
-    <div className="flex h-full flex-col px-5 pb-8 pt-4">
-      <BackButton />
+    <div className="flex h-full min-h-0 flex-col">
+      <NavBar title="Verify" back onBack={() => navigate({ to: "/register" })} />
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8 pt-4">
       <h1 className="text-[34px] font-bold leading-tight">Verify Your Phone</h1>
       <p className="mt-2 text-[17px] leading-relaxed text-muted-foreground">Enter the 6-digit code we sent. Any 6 digits work in this preview.</p>
       {done ? (
@@ -375,6 +314,7 @@ export function VerifyScreen() {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }
@@ -385,8 +325,9 @@ export function ForgotScreen() {
   const [sent, setSent] = useState(false);
 
   return (
-    <div className="flex h-full flex-col px-5 pb-8 pt-4">
-      <BackButton />
+    <div className="flex h-full min-h-0 flex-col">
+      <NavBar title="Password" back onBack={() => navigate({ to: "/login" })} />
+      <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-8 pt-4">
       {sent ? (
         <div className="mt-10 text-center">
           <CheckMark />
@@ -417,6 +358,7 @@ export function ForgotScreen() {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }

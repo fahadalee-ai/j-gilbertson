@@ -6,7 +6,7 @@ import { useApp } from "@/lib/store";
 
 export function SplashScreen() {
   const navigate = useNavigate();
-  const { ready, user, onboarded } = useApp();
+  const { ready } = useApp();
   const [tagline, setTagline] = useState(false);
 
   useEffect(() => {
@@ -18,12 +18,10 @@ export function SplashScreen() {
     if (!ready) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timer = window.setTimeout(() => {
-      if (user) navigate({ to: "/home" });
-      else if (onboarded) navigate({ to: "/welcome" });
-      else navigate({ to: "/onboarding" });
+      navigate({ to: "/onboarding" });
     }, reduce ? 400 : 2500);
     return () => window.clearTimeout(timer);
-  }, [ready, user, onboarded, navigate]);
+  }, [ready, navigate]);
 
   return (
     <div className="flex h-full flex-col items-center bg-[linear-gradient(180deg,#3a3284_0%,#4C419A_46%,#2EB4E8_100%)] px-6">

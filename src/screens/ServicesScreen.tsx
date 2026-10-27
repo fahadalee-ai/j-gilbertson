@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Check, ChevronRight, Clock, MapPin, Phone, Video } from "lucide-react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Accordion, Button, Page, Photo, PopularBadge, SearchField, SkeletonRows } from "@/components/mobile";
+import { Accordion, Button, NavBar, Page, Photo, PopularBadge, SearchField, SkeletonRows } from "@/components/mobile";
 import { feeNote, privacyNote } from "@/lib/content";
 import { catalogServices, categories, getService, type ServiceCategory } from "@/lib/services";
 import { useApp } from "@/lib/store";
@@ -121,11 +121,12 @@ export function ServiceDetailScreen({ serviceId }: { serviceId: string }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
+      <NavBar title={service.name} back />
       <div
         className="min-h-0 flex-1 overflow-y-auto no-scrollbar"
         onScroll={(event) => setY(event.currentTarget.scrollTop)}
       >
-        <div className="relative h-[280px] overflow-hidden">
+        <div className="relative h-[220px] overflow-hidden">
           <img
             src={`${import.meta.env.BASE_URL}images/${service.image}`}
             alt={service.name}
@@ -133,9 +134,6 @@ export function ServiceDetailScreen({ serviceId }: { serviceId: string }) {
             style={{ transform: `translateY(${Math.min(y, 180) * 0.35}px)` }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-          <button type="button" aria-label="Back" onClick={() => window.history.back()} className="absolute left-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-ink">
-            <ChevronRight className="rotate-180" />
-          </button>
         </div>
         <div className="-mt-6 rounded-t-[24px] bg-background px-5 pb-8 pt-5">
           <div className="flex flex-wrap items-center gap-2">

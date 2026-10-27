@@ -241,12 +241,10 @@ export function HomeScreen() {
       <section className="mt-7 px-5">
         <h2 className="mb-3 text-[22px] font-semibold tracking-tight">Visit Us</h2>
         <Card className="overflow-hidden">
-          <iframe
-            title="Map showing 8565 S Eastern Avenue, Las Vegas"
-            src="https://www.openstreetmap.org/export/embed.html?bbox=-115.132%2C36.026%2C-115.108%2C36.042&layer=mapnik&marker=36.034013%2C-115.120082"
-            className="h-40 w-full border-0"
-            loading="lazy"
-          />
+          <button type="button" aria-label="Map of the office. Open directions." onClick={() => window.open(firm.mapsUrl, "_blank", "noopener,noreferrer")} className="relative block w-full">
+            <Photo src="office-map.jpg" alt="Map of 8565 S Eastern Avenue, Las Vegas" className="h-40 w-full" />
+            <span className="absolute bottom-1 right-2 rounded bg-white/80 px-1 text-[10px] font-medium text-[#1C1B2E]/80">© OpenStreetMap</span>
+          </button>
           <div className="p-4">
             <p className="text-[17px] font-semibold">{firm.addressLine}</p>
             <p className="text-[15px] text-muted-foreground">{firm.cityLine}</p>

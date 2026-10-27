@@ -1,9 +1,9 @@
-import { useCanGoBack, useRouter } from "@tanstack/react-router";
+import { useCanGoBack, useNavigate, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   AlertTriangle,
-  ArrowLeft,
   Check,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   Eye,
   EyeOff,
@@ -285,15 +285,13 @@ export function Toggle({
         aria-label={label}
         onClick={() => onChange(!checked)}
         className={cn(
-          "relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors",
+          "relative h-8 w-[52px] shrink-0 rounded-full p-[2px] transition-colors",
           checked ? "bg-success" : "bg-[#D5D8E4] dark:bg-[#3A3A48]",
         )}
       >
         <span
-          className={cn(
-            "absolute top-[2px] h-[27px] w-[27px] rounded-full bg-white shadow transition-transform",
-            checked ? "translate-x-[22px]" : "translate-x-[2px]",
-          )}
+          className="block h-7 w-7 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.28)] transition-transform duration-200"
+          style={{ transform: checked ? "translateX(20px)" : "translateX(0px)" }}
         />
       </button>
     </div>
@@ -367,6 +365,81 @@ export function SearchField({
   );
 }
 
+function parentHref(pathname: string) {
+  if (/^\/services\/.+/.test(pathname)) return "/services";
+  if (/^\/appointments\/.+/.test(pathname)) return "/appointments";
+  if (pathname.startsWith("/profile/") && pathname !== "/profile") return "/profile";
+  if (pathname === "/notifications") return "/home";
+  if (pathname === "/login" || pathname === "/onboarding") return "/onboarding";
+  if (pathname === "/register" || pathname === "/forgot" || pathname === "/verify") return "/login";
+  return "/home";
+}
+
+export function NavBar({
+  title,
+  back = false,
+  onBack,
+  right,
+  transparent = false,
+}: {
+  title?: string;
+  back?: boolean;
+  onBack?: () => void;
+  right?: ReactNode;
+  transparent?: boolean;
+}) {
+  const router = useRouter();
+  const navigate = useNavigate();
+  const canGoBack = useCanGoBack();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+      return;
+    }
+    if (canGoBack) {
+      router.history.back();
+      return;
+    }
+    const href = parentHref(pathname);
+    if (href === "/services") navigate({ to: "/services", search: { q: "" } });
+    else if (href === "/appointments") navigate({ to: "/appointments" });
+    else if (href === "/profile") navigate({ to: "/profile" });
+    else if (href === "/onboarding") navigate({ to: "/onboarding" });
+    else if (href === "/login") navigate({ to: "/login" });
+    else navigate({ to: "/home" });
+  };
+
+  return (
+    <header
+      className={cn(
+        "z-20 shrink-0 border-b",
+        transparent ? "border-transparent bg-transparent" : "border-divider bg-background/95 backdrop-blur-xl",
+      )}
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
+    >
+      <div className="relative flex h-11 items-center">
+        {back ? (
+          <button
+            type="button"
+            aria-label="Back"
+            onClick={handleBack}
+            className="relative z-10 flex h-11 items-center gap-0.5 pl-1 pr-3 text-[17px] font-medium text-primary"
+          >
+            <ChevronLeft size={26} strokeWidth={2.4} />
+            Back
+          </button>
+        ) : (
+          <span className="w-11" />
+        )}
+        <h1 className="pointer-events-none absolute inset-x-20 truncate text-center text-[17px] font-semibold">{title}</h1>
+        <div className="relative z-10 ml-auto flex min-w-11 items-center justify-end pr-2">{right}</div>
+      </div>
+    </header>
+  );
+}
+
 export function Page({
   title,
   large,
@@ -386,8 +459,6 @@ export function Page({
   footer?: ReactNode;
   onRefresh?: () => Promise<void> | void;
 }) {
-  const router = useRouter();
-  const canGoBack = useCanGoBack();
   const scroller = useRef<HTMLDivElement>(null);
   const [compact, setCompact] = useState(false);
   const [pull, setPull] = useState(0);
@@ -414,7 +485,7 @@ export function Page({
       tracking = false;
       const touch = event.changedTouches[0];
       if (touch.clientX - x > 80 && Math.abs(touch.clientY - y) < 60) {
-        if (canGoBack) router.history.back();
+        shell.querySelector<HTMLButtonElement>('header button[aria-label="Back"]')?.click();
       }
     };
     shell.addEventListener("touchstart", start, { passive: true });
@@ -423,29 +494,11 @@ export function Page({
       shell.removeEventListener("touchstart", start);
       shell.removeEventListener("touchend", end);
     };
-  }, [back, canGoBack, router]);
+  }, [back]);
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="z-20 flex h-12 shrink-0 items-center gap-1 px-2">
-        {back ? (
-          <button
-            type="button"
-            aria-label="Back"
-            onClick={() => (onBack ? onBack() : canGoBack ? router.history.back() : window.history.back())}
-            className="flex h-11 min-w-11 items-center gap-0.5 rounded-full px-1 text-primary"
-          >
-            <ArrowLeft size={22} />
-            <span className="text-[17px]">Back</span>
-          </button>
-        ) : (
-          <span className="w-2" />
-        )}
-        <h1 className={cn("flex-1 truncate text-center text-[17px] font-semibold transition-opacity", large && !compact ? "opacity-0" : "opacity-100")}>
-          {title}
-        </h1>
-        <div className="flex min-w-11 justify-end">{right}</div>
-      </header>
+      <NavBar title={large && !compact ? undefined : title} back={back} onBack={onBack} right={right} />
       <div
         ref={scroller}
         onScroll={(event) => setCompact(event.currentTarget.scrollTop > 24)}

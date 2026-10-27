@@ -89,7 +89,7 @@ export function ProfileScreen() {
                 message: "You can sign back in any time. Saved appointments stay on this device.",
                 actions: [
                   { label: "Cancel", role: "cancel" },
-                  { label: "Log Out", role: "destructive", onPress: () => { logout(); navigate({ to: "/welcome" }); } },
+                  { label: "Log Out", role: "destructive", onPress: () => { logout(); navigate({ to: "/" }); } },
                 ],
               })
             }
@@ -322,7 +322,10 @@ export function ContactScreen() {
   return (
     <Page title="Contact and Location" back>
       <div className="px-5">
-        <iframe title="Map of the office" className="h-44 w-full rounded-[16px] border-0" src="https://www.openstreetmap.org/export/embed.html?bbox=-115.132%2C36.026%2C-115.108%2C36.042&layer=mapnik&marker=36.034013%2C-115.120082" />
+        <button type="button" aria-label="Map of the office. Open directions." onClick={() => window.open(firm.mapsUrl, "_blank", "noopener,noreferrer")} className="relative block w-full overflow-hidden rounded-[16px]">
+          <Photo src="office-map.jpg" alt="Map of 8565 S Eastern Avenue, Las Vegas" className="h-44 w-full" />
+          <span className="absolute bottom-1 right-2 rounded bg-white/80 px-1 text-[10px] font-medium text-[#1C1B2E]/80">© OpenStreetMap</span>
+        </button>
         <div className="mt-4 overflow-hidden rounded-[16px] bg-card shadow-card">
           <a href={firm.mapsUrl} className="flex min-h-[52px] items-center gap-3 border-b border-divider px-4">
             <MapPin className="text-sky" size={18} />
@@ -474,7 +477,7 @@ export function SettingsScreen() {
                     onPress: () => {
                       deleteAccount();
                       closeSheet();
-                      navigate({ to: "/welcome" });
+                      navigate({ to: "/" });
                     },
                   },
                 ],

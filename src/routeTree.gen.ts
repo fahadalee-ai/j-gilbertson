@@ -16,7 +16,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as VerifyRouteImport } from './routes/verify'
-import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AppBookRouteImport } from './routes/_app/book'
 import { Route as AppHomeRouteImport } from './routes/_app/home'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
@@ -67,11 +66,6 @@ const RegisterRoute = RegisterRouteImport.update({
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const WelcomeRoute = WelcomeRouteImport.update({
-  id: '/welcome',
-  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppBookRoute = AppBookRouteImport.update({
@@ -168,7 +162,6 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
   '/verify': typeof VerifyRoute
-  '/welcome': typeof WelcomeRoute
   '/book': typeof AppBookRoute
   '/home': typeof AppHomeRoute
   '/notifications': typeof AppNotificationsRoute
@@ -194,7 +187,6 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
   '/verify': typeof VerifyRoute
-  '/welcome': typeof WelcomeRoute
   '/book': typeof AppBookRoute
   '/home': typeof AppHomeRoute
   '/notifications': typeof AppNotificationsRoute
@@ -222,7 +214,6 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/register': typeof RegisterRoute
   '/verify': typeof VerifyRoute
-  '/welcome': typeof WelcomeRoute
   '/_app/book': typeof AppBookRoute
   '/_app/home': typeof AppHomeRoute
   '/_app/notifications': typeof AppNotificationsRoute
@@ -250,7 +241,6 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/verify'
-    | '/welcome'
     | '/book'
     | '/home'
     | '/notifications'
@@ -276,7 +266,6 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/verify'
-    | '/welcome'
     | '/book'
     | '/home'
     | '/notifications'
@@ -303,7 +292,6 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/register'
     | '/verify'
-    | '/welcome'
     | '/_app/book'
     | '/_app/home'
     | '/_app/notifications'
@@ -331,7 +319,6 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   RegisterRoute: typeof RegisterRoute
   VerifyRoute: typeof VerifyRoute
-  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -383,13 +370,6 @@ declare module '@tanstack/react-router' {
       path: '/verify'
       fullPath: '/verify'
       preLoaderRoute: typeof VerifyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/welcome': {
-      id: '/welcome'
-      path: '/welcome'
-      fullPath: '/welcome'
-      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/book': {
@@ -566,7 +546,6 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   RegisterRoute: RegisterRoute,
   VerifyRoute: VerifyRoute,
-  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

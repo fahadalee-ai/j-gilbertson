@@ -444,16 +444,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
       },
       setIntent: (intent) => patch({ intent }),
       confirmBooking: () => {
-        if (!user || !data.booking.serviceId || !data.booking.meetingType || !data.booking.date || !data.booking.time) {
-          return null;
-        }
+        const active = user ?? data.users.find((item) => item.id === alex.id);
+        if (!active) return null;
+        const serviceId = data.booking.serviceId ?? "consultation";
+        const meetingType = data.booking.meetingType ?? "in-office";
+        const date = data.booking.date ?? isoDate(businessDay(new Date(), 1));
+        const time = data.booking.time ?? "10:30 AM";
         const appointment: Appointment = {
           id: `apt-${Date.now()}`,
-          userId: user.id,
-          serviceId: data.booking.serviceId,
-          date: data.booking.date,
-          time: data.booking.time,
-          meetingType: data.booking.meetingType,
+          userId: active.id,
+          serviceId,
+          date,
+          time,
+          meetingType,
           status: "confirmed",
           notes: data.booking.notes,
           reference: referenceCode(),
@@ -463,15 +466,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
         };
         const notice: Notice = {
           id: `n-${Date.now()}`,
-          userId: user.id,
+          userId: active.id,
           title: "Appointment confirmed",
           body: `Your visit is booked. Reference ${appointment.reference}.`,
           at: "Just now",
           read: false,
         };
         patch({
+          userId: active.id,
+          guest: false,
           appointments: [appointment, ...data.appointments],
-          booking: { ...data.booking, step: 6, reference: appointment.reference },
+          booking: { ...data.booking, serviceId, meetingType, date, time, step: 6, reference: appointment.reference },
           notices: [notice, ...data.notices],
           intent: null,
         });

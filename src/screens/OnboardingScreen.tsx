@@ -13,10 +13,10 @@ export function OnboardingScreen() {
   const slide = onboarding[index];
   const last = index === onboarding.length - 1;
 
-  const finish = (path: "/welcome") => {
+  const finish = () => {
     haptic("light");
     markOnboarded();
-    navigate({ to: path });
+    navigate({ to: "/login" });
   };
 
   return (
@@ -37,7 +37,7 @@ export function OnboardingScreen() {
         <div className="flex justify-end px-3 pt-[max(0.5rem,env(safe-area-inset-top))]">
           <button
             type="button"
-            onClick={() => finish("/welcome")}
+            onClick={finish}
             className="pointer-events-auto min-h-11 rounded-full bg-[#0E0C1C]/70 px-4 text-[17px] font-semibold text-white shadow-[0_1px_2px_rgba(0,0,0,0.35)] backdrop-blur-md"
           >
             Skip
@@ -58,7 +58,7 @@ export function OnboardingScreen() {
             <div className="mt-6">
               <Button
                 onClick={() => {
-                  if (last) finish("/welcome");
+                  if (last) finish();
                   else {
                     haptic("light");
                     setIndex(index + 1);

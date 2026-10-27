@@ -2,7 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Building2, CalendarPlus, FileText, MapPin, Phone, Share2, Video } from "lucide-react";
 import { useState } from "react";
 import { CalendarPicker } from "@/components/CalendarPicker";
-import { Button, CheckMark, EmptyState, Page, Segmented, StatusBadge } from "@/components/mobile";
+import { Button, CheckMark, EmptyState, Page, Photo, Segmented, StatusBadge } from "@/components/mobile";
 import { useOverlay } from "@/components/mobile";
 import { cancelReasons, firm, isSlotOpen, slotGroups } from "@/lib/content";
 import { longDate, shortDate } from "@/lib/format";
@@ -272,7 +272,10 @@ export function AppointmentDetailScreen({ appointmentId, startReschedule = false
           <p className="mt-2 text-[13px] text-muted-foreground">{firm.timezone}</p>
         </div>
         {appointment.meetingType === "in-office" && (
-          <iframe title="Office location" className="h-36 w-full rounded-[16px] border-0" src="https://www.openstreetmap.org/export/embed.html?bbox=-115.132%2C36.026%2C-115.108%2C36.042&layer=mapnik&marker=36.034013%2C-115.120082" />
+          <button type="button" aria-label="Map of the office. Open directions." onClick={() => window.open(firm.mapsUrl, "_blank", "noopener,noreferrer")} className="relative block w-full overflow-hidden rounded-[16px]">
+            <Photo src="office-map.jpg" alt="Map of 8565 S Eastern Avenue, Las Vegas" className="h-36 w-full" />
+            <span className="absolute bottom-1 right-2 rounded bg-white/80 px-1 text-[10px] font-medium text-[#1C1B2E]/80">© OpenStreetMap</span>
+          </button>
         )}
         <div className="rounded-[20px] bg-card p-4 shadow-card text-[15px] leading-relaxed">
           <p><span className="text-muted-foreground">CPA · </span>{appointment.cpa}</p>
