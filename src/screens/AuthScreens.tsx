@@ -1,9 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ScanFace } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
 import { AppleGlyph, Button, CheckMark, Field, GoogleGlyph, Logo, Toggle } from "@/components/mobile";
 import { firm, privacySections, termsSections } from "@/lib/content";
-import { formatPhone, isEmail, isPhone, passwordLabel, passwordScore } from "@/lib/format";
+import { formatPhone, passwordLabel, passwordScore } from "@/lib/format";
 import { haptic } from "@/lib/haptics";
 import { DEMO, useApp, type ClientType } from "@/lib/store";
 import { useOverlay } from "@/components/mobile";
@@ -65,92 +65,94 @@ export function WelcomeScreen() {
   );
 }
 
+function AuthHeader({ title, subtitle }: { title: string; subtitle: string }) {
+  const navigate = useNavigate();
+  return (
+    <div className="bg-[linear-gradient(165deg,#322C72_0%,#4C419A_70%,#3E4FA6_100%)] px-5 pb-16 pt-[max(0.75rem,env(safe-area-inset-top))] text-white">
+      <button type="button" aria-label="Back" onClick={() => navigate({ to: "/welcome" })} className="mb-6 flex min-h-11 items-center gap-1 text-[17px] font-medium text-white">
+        <ArrowLeft size={20} /> Back
+      </button>
+      <Logo size={64} />
+      <h1 className="mt-4 text-[32px] font-bold leading-[1.1] tracking-tight">{title}</h1>
+      <p className="mt-2 max-w-[18rem] text-[16px] leading-relaxed text-white/85">{subtitle}</p>
+    </div>
+  );
+}
+
 export function LoginScreen() {
   const navigate = useNavigate();
-  const { login, loginAsAlex, setRemember, remember, intent, pushToast, faceId } = useApp();
-  const { ask } = useOverlay();
+  const { login, loginAsAlex, setRemember, remember, intent, pushToast } = useApp();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; password?: string; form?: string }>({});
+  const nextPath = intent === "confirm-booking" ? "/book" : "/home";
 
   const submit = () => {
-    const next: typeof errors = {};
-    if (!isEmail(email)) next.email = "Enter a valid email address.";
-    if (password.length < 8) next.password = "Password must be at least 8 characters.";
-    setErrors(next);
-    if (Object.keys(next).length) return;
     const message = login(email, password);
     if (message) {
-      setErrors({ form: message });
-      haptic("warning");
+      pushToast(message);
       return;
     }
     haptic("success");
     pushToast("Welcome back", "You are signed in.");
-    navigate({ to: intent === "confirm-booking" ? "/book" : "/home" });
+    navigate({ to: nextPath });
+  };
+
+  const social = () => {
+    haptic("success");
+    loginAsAlex();
+    navigate({ to: nextPath });
   };
 
   return (
-    <div className="h-full overflow-y-auto no-scrollbar px-5 pb-8 pt-4">
-      <BackButton />
-      <h1 className="text-[34px] font-bold leading-tight">Welcome Back</h1>
-      <p className="mt-2 text-[17px] leading-relaxed text-muted-foreground">Log in to manage your appointments.</p>
-      <div className="mt-6 space-y-4">
-        <Field label="Email" type="email" inputMode="email" autoComplete="email" value={email} onChange={setEmail} error={errors.email} placeholder="you@email.com" />
-        <Field label="Password" type="password" autoComplete="current-password" value={password} onChange={setPassword} error={errors.password} placeholder="Your password" />
-        <Toggle checked={remember} onChange={setRemember} label="Remember me" />
-        <button type="button" onClick={() => navigate({ to: "/forgot" })} className="min-h-11 text-[17px] font-semibold text-primary">
-          Forgot Password?
-        </button>
-        {errors.form && <p className="text-[15px] text-destructive">{errors.form}</p>}
-        <Button onClick={submit}>Log In</Button>
-        <button
-          type="button"
-          onClick={() => {
-            setEmail(DEMO.email);
-            setPassword(DEMO.password);
-          }}
-          className="w-full text-center text-[13px] text-muted-foreground"
-        >
-          Preview login: {DEMO.email} · {DEMO.password}
-        </button>
+    <div className="h-full overflow-y-auto no-scrollbar bg-background">
+      <AuthHeader title="Welcome back" subtitle="Sign in to view visits, documents, and reminders." />
+      <div className="-mt-8 rounded-t-[28px] bg-background px-5 pb-10 pt-6">
+        <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-card">
+          <Field label="Email" type="email" inputMode="email" autoComplete="email" value={email} onChange={setEmail} placeholder="you@email.com" />
+          <Field label="Password" type="password" autoComplete="current-password" value={password} onChange={setPassword} placeholder="Your password" />
+          <Toggle checked={remember} onChange={setRemember} label="Remember me" />
+          <div className="-mt-2 flex justify-end">
+            <button type="button" onClick={() => navigate({ to: "/forgot" })} className="min-h-11 text-[15px] font-semibold text-primary">
+              Forgot password?
+            </button>
+          </div>
+          <Button onClick={submit}>Log In</Button>
+          <button
+            type="button"
+            onClick={() => {
+              setEmail(DEMO.email);
+              setPassword(DEMO.password);
+            }}
+            className="w-full rounded-[12px] bg-muted px-3 py-2 text-center text-[13px] text-muted-foreground"
+          >
+            Preview · {DEMO.email}
+          </button>
+        </div>
+        <div className="my-5 flex items-center gap-3 text-[13px] text-muted-foreground">
+          <span className="h-px flex-1 bg-divider" /> or <span className="h-px flex-1 bg-divider" />
+        </div>
+        <div className="space-y-3">
+          <Button variant="apple" onClick={social}>
+            <AppleGlyph /> Sign in with Apple
+          </Button>
+          <Button variant="google" onClick={social}>
+            <GoogleGlyph /> Continue with Google
+          </Button>
+        </div>
+        <p className="mt-6 text-center text-[15px] text-muted-foreground">
+          New to the firm?{" "}
+          <button type="button" className="font-semibold text-primary" onClick={() => navigate({ to: "/register" })}>
+            Create an account
+          </button>
+        </p>
       </div>
-      <div className="my-5 flex items-center gap-3 text-[13px] text-muted-foreground">
-        <span className="h-px flex-1 bg-divider" /> or <span className="h-px flex-1 bg-divider" />
-      </div>
-      <div className="space-y-3">
-        <Button variant="apple" onClick={() => { loginAsAlex(); navigate({ to: intent === "confirm-booking" ? "/book" : "/home" }); }}>
-          <AppleGlyph /> Sign in with Apple
-        </Button>
-        <Button variant="google" onClick={() => { loginAsAlex(); navigate({ to: intent === "confirm-booking" ? "/book" : "/home" }); }}>
-          <GoogleGlyph /> Continue with Google
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={async () => {
-            const allowed = faceId || (await ask("Face ID", "KJ Gilbertson CPA would like to use Face ID to sign you in on this iPhone."));
-            if (!allowed) return;
-            haptic("success");
-            loginAsAlex();
-            pushToast("Face ID recognized", "Signed in as Alex Morgan.");
-            navigate({ to: intent === "confirm-booking" ? "/book" : "/home" });
-          }}
-        >
-          <ScanFace size={20} /> Log in with Face ID
-        </Button>
-      </div>
-      <p className="mt-6 text-center text-[15px] text-muted-foreground">
-        Don't have an account?{" "}
-        <button type="button" className="font-semibold text-primary" onClick={() => navigate({ to: "/register" })}>
-          Register
-        </button>
-      </p>
     </div>
   );
 }
 
 export function RegisterScreen() {
   const navigate = useNavigate();
+  const { pushToast } = useApp();
   const { register, openSheet: openClientSheet, openLegal } = useRegisterSheet();
   const [form, setForm] = useState({
     firstName: "",
@@ -162,21 +164,12 @@ export function RegisterScreen() {
     clientType: "Small Business Owner" as ClientType,
     agree: false,
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const score = passwordScore(form.password);
+  const strength = score <= 1 ? "bg-warning" : score === 2 ? "bg-primary" : "bg-success";
 
   const set = (key: keyof typeof form, value: string | boolean) => setForm((current) => ({ ...current, [key]: value }));
 
   const submit = () => {
-    const next: Record<string, string> = {};
-    if (form.firstName.trim().length < 2 || form.lastName.trim().length < 2) next.name = "Enter your first and last name.";
-    if (!isEmail(form.email)) next.email = "Enter a valid email address.";
-    if (!isPhone(form.phone)) next.phone = "Enter a 10-digit US phone number.";
-    if (score < 2) next.password = "Use 8 or more characters with mixed case or a number.";
-    if (form.password !== form.confirm) next.confirm = "Those passwords don't match.";
-    if (!form.agree) next.agree = "Please agree to the Terms of Service and Privacy Policy.";
-    setErrors(next);
-    if (Object.keys(next).length) return;
     const message = register({
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
@@ -186,7 +179,7 @@ export function RegisterScreen() {
       clientType: form.clientType,
     });
     if (message) {
-      setErrors({ email: message });
+      pushToast(message);
       return;
     }
     haptic("success");
@@ -194,58 +187,60 @@ export function RegisterScreen() {
   };
 
   return (
-    <div className="h-full overflow-y-auto no-scrollbar px-5 pb-10 pt-4">
-      <BackButton />
-      <h1 className="text-[34px] font-bold leading-tight">Create Your Account</h1>
-      <p className="mt-2 text-[17px] leading-relaxed text-muted-foreground">We will text a code to verify your phone.</p>
-      <div className="mt-6 space-y-4">
-        <Field label="First name" value={form.firstName} onChange={(value) => set("firstName", value)} autoComplete="given-name" error={errors.name} />
-        <Field label="Last name" value={form.lastName} onChange={(value) => set("lastName", value)} autoComplete="family-name" />
-        <Field label="Email" type="email" inputMode="email" value={form.email} onChange={(value) => set("email", value)} error={errors.email} autoComplete="email" />
-        <Field label="Phone number" inputMode="tel" value={form.phone} onChange={(value) => set("phone", formatPhone(value))} error={errors.phone} placeholder="(702) 555-0100" autoComplete="tel" />
-        <Field label="Password" type="password" value={form.password} onChange={(value) => set("password", value)} error={errors.password} autoComplete="new-password" />
-        <div>
-          <div className="flex gap-1" aria-hidden>
-            {[0, 1, 2, 3].map((bar) => (
-              <span key={bar} className={`h-1.5 flex-1 rounded-full ${bar < score ? "bg-primary" : "bg-divider"}`} />
-            ))}
+    <div className="h-full overflow-y-auto no-scrollbar bg-background">
+      <AuthHeader title="Create your account" subtitle="A few details, then a text code to confirm your phone." />
+      <div className="-mt-8 rounded-t-[28px] bg-background px-5 pb-10 pt-6">
+        <div className="space-y-4 rounded-[24px] bg-card p-4 shadow-card">
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="First name" value={form.firstName} onChange={(value) => set("firstName", value)} autoComplete="given-name" />
+            <Field label="Last name" value={form.lastName} onChange={(value) => set("lastName", value)} autoComplete="family-name" />
           </div>
-          <p className="mt-1 text-[13px] text-muted-foreground">Strength: {passwordLabel(score)}</p>
+          <Field label="Email" type="email" inputMode="email" value={form.email} onChange={(value) => set("email", value)} autoComplete="email" placeholder="you@email.com" />
+          <Field label="Phone number" inputMode="tel" value={form.phone} onChange={(value) => set("phone", formatPhone(value))} placeholder="(702) 555-0100" autoComplete="tel" />
+          <Field label="Password" type="password" value={form.password} onChange={(value) => set("password", value)} autoComplete="new-password" placeholder="Create a password" />
+          <div>
+            <div className="flex gap-1" aria-hidden>
+              {[0, 1, 2, 3].map((bar) => (
+                <span key={bar} className={`h-1.5 flex-1 rounded-full ${bar < score ? strength : "bg-divider"}`} />
+              ))}
+            </div>
+            <p className="mt-1.5 text-[13px] text-muted-foreground">Strength: {passwordLabel(score)}</p>
+          </div>
+          <Field label="Confirm password" type="password" value={form.confirm} onChange={(value) => set("confirm", value)} autoComplete="new-password" />
+          <button
+            type="button"
+            onClick={() => openClientSheet(form.clientType, (value) => set("clientType", value))}
+            className="flex min-h-[52px] w-full items-center justify-between rounded-[14px] border border-divider bg-background px-4 text-left"
+          >
+            <span>
+              <span className="block text-[13px] text-muted-foreground">I am a</span>
+              <span className="text-[17px] font-medium">{form.clientType}</span>
+            </span>
+            <ChevronRight size={18} className="text-muted-foreground" />
+          </button>
+          <label className="flex items-start gap-3 rounded-[14px] bg-muted px-3 py-3 text-[15px] leading-relaxed">
+            <input type="checkbox" checked={form.agree} onChange={(event) => set("agree", event.target.checked)} className="mt-1 h-5 w-5 accent-[#4C419A]" />
+            <span>
+              I agree to the{" "}
+              <button type="button" className="font-semibold text-primary" onClick={() => openLegal("terms")}>
+                Terms of Service
+              </button>{" "}
+              and{" "}
+              <button type="button" className="font-semibold text-primary" onClick={() => openLegal("privacy")}>
+                Privacy Policy
+              </button>
+              .
+            </span>
+          </label>
+          <Button onClick={submit}>Create Account</Button>
         </div>
-        <Field label="Confirm password" type="password" value={form.confirm} onChange={(value) => set("confirm", value)} error={errors.confirm} autoComplete="new-password" />
-        <button
-          type="button"
-          onClick={() => openClientSheet(form.clientType, (value) => set("clientType", value))}
-          className="flex min-h-[52px] w-full items-center justify-between rounded-[14px] border border-divider bg-card px-4 text-left"
-        >
-          <span>
-            <span className="block text-[13px] text-muted-foreground">I am a</span>
-            <span className="text-[17px]">{form.clientType}</span>
-          </span>
-        </button>
-        <label className="flex items-start gap-3 text-[15px] leading-relaxed">
-          <input type="checkbox" checked={form.agree} onChange={(event) => set("agree", event.target.checked)} className="mt-1 h-5 w-5 accent-[#4C419A]" />
-          <span>
-            I agree to the{" "}
-            <button type="button" className="font-semibold text-primary" onClick={() => openLegal("terms")}>
-              Terms of Service
-            </button>{" "}
-            and{" "}
-            <button type="button" className="font-semibold text-primary" onClick={() => openLegal("privacy")}>
-              Privacy Policy
-            </button>
-            .
-          </span>
-        </label>
-        {errors.agree && <p className="text-[13px] text-destructive">{errors.agree}</p>}
-        <Button onClick={submit}>Create Account</Button>
+        <p className="mt-6 text-center text-[15px] text-muted-foreground">
+          Already have an account?{" "}
+          <button type="button" className="font-semibold text-primary" onClick={() => navigate({ to: "/login" })}>
+            Log in
+          </button>
+        </p>
       </div>
-      <p className="mt-6 text-center text-[15px] text-muted-foreground">
-        Already have an account?{" "}
-        <button type="button" className="font-semibold text-primary" onClick={() => navigate({ to: "/login" })}>
-          Log In
-        </button>
-      </p>
     </div>
   );
 }
@@ -297,7 +292,6 @@ export function VerifyScreen() {
   const { completeVerification, pendingUserId, intent, pushToast } = useApp();
   const [digits, setDigits] = useState(["", "", "", "", "", ""]);
   const [seconds, setSeconds] = useState(30);
-  const [error, setError] = useState("");
   const [done, setDone] = useState(false);
   const inputs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -308,12 +302,8 @@ export function VerifyScreen() {
   }, [seconds]);
 
   const verify = () => {
-    if (digits.join("").length < 6) {
-      setError("Enter the 6-digit code.");
-      return;
-    }
     if (!pendingUserId || !completeVerification()) {
-      setError("Create an account first, then request a code.");
+      pushToast("Create an account first, then request a code.");
       return;
     }
     haptic("success");
@@ -369,7 +359,6 @@ export function VerifyScreen() {
               />
             ))}
           </div>
-          {error && <p className="mt-3 text-[13px] text-destructive">{error}</p>}
           <button
             type="button"
             disabled={seconds > 0}
@@ -393,7 +382,6 @@ export function VerifyScreen() {
 export function ForgotScreen() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
 
   return (
@@ -415,15 +403,11 @@ export function ForgotScreen() {
           <h1 className="text-[34px] font-bold leading-tight">Forgot Password</h1>
           <p className="mt-2 text-[17px] leading-relaxed text-muted-foreground">We will email you a link to choose a new password.</p>
           <div className="mt-6">
-            <Field label="Email" type="email" inputMode="email" value={email} onChange={setEmail} error={error} autoComplete="email" />
+            <Field label="Email" type="email" inputMode="email" value={email} onChange={setEmail} autoComplete="email" />
           </div>
           <div className="mt-6">
             <Button
               onClick={() => {
-                if (!isEmail(email)) {
-                  setError("Enter the email on your account.");
-                  return;
-                }
                 haptic("success");
                 setSent(true);
               }}

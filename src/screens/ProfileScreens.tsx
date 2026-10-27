@@ -18,7 +18,7 @@ import { useMemo, useState } from "react";
 import { Accordion, Button, Field, Group, Page, Photo, Row, SearchField, Segmented, Toggle } from "@/components/mobile";
 import { useOverlay } from "@/components/mobile";
 import { faqs, firm, privacyNote, taxDates, team, testimonials, values } from "@/lib/content";
-import { formatPhone, isEmail, isPhone, longDate } from "@/lib/format";
+import { formatPhone, longDate } from "@/lib/format";
 import { useApp, type Appearance } from "@/lib/store";
 import { LegalBody } from "./AuthScreens";
 
@@ -108,7 +108,6 @@ export function EditProfileScreen() {
   const [last, setLast] = useState(user?.lastName ?? "");
   const [email, setEmail] = useState(user?.email ?? "");
   const [phone, setPhone] = useState(user?.phone ?? "");
-  const [error, setError] = useState("");
 
   if (!user) {
     return (
@@ -140,12 +139,8 @@ export function EditProfileScreen() {
         <Field label="Last name" value={last} onChange={setLast} />
         <Field label="Email" type="email" value={email} onChange={setEmail} />
         <Field label="Phone" inputMode="tel" value={phone} onChange={(value) => setPhone(formatPhone(value))} />
-        {error && <p className="text-[13px] text-destructive">{error}</p>}
         <Button
           onClick={() => {
-            if (first.trim().length < 2 || last.trim().length < 2) return setError("Enter your first and last name.");
-            if (!isEmail(email)) return setError("Enter a valid email.");
-            if (!isPhone(phone)) return setError("Enter a 10-digit phone number.");
             updateUser({ firstName: first.trim(), lastName: last.trim(), email: email.trim(), phone: formatPhone(phone) });
             pushToast("Profile saved");
             window.history.back();
@@ -321,7 +316,6 @@ export function AboutScreen() {
 
 export function ContactScreen() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
   const { pushToast } = useApp();
 
@@ -368,15 +362,10 @@ export function ContactScreen() {
             <Field label="Name" value={form.name} onChange={(name) => setForm({ ...form, name })} />
             <Field label="Email" type="email" value={form.email} onChange={(email) => setForm({ ...form, email })} />
             <Field label="Message" value={form.message} onChange={(message) => setForm({ ...form, message })} />
-            {error && <p className="text-[13px] text-destructive">{error}</p>}
             <Button
               onClick={() => {
                 if (!navigator.onLine) {
-                  setError("You're offline. Try again when you reconnect.");
-                  return;
-                }
-                if (form.name.trim().length < 2 || !isEmail(form.email) || form.message.trim().length < 8) {
-                  setError("Add your name, a valid email, and a short message.");
+                  pushToast("You're offline", "Try again when you reconnect.");
                   return;
                 }
                 setSent(true);

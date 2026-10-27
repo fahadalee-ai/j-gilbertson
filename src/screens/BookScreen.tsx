@@ -4,7 +4,7 @@ import { useState } from "react";
 import { CalendarPicker } from "@/components/CalendarPicker";
 import { Button, CheckMark, Field, Page, SearchField, Segmented, TextArea, Toggle } from "@/components/mobile";
 import { cancellationPolicy, firm, isSlotOpen, meetingOptions, privacyNote, slotGroups, type MeetingType } from "@/lib/content";
-import { fileKind, formatPhone, isEmail, isPhone, longDate } from "@/lib/format";
+import { fileKind, formatPhone, longDate } from "@/lib/format";
 import { haptic } from "@/lib/haptics";
 import { bookableServices, getService } from "@/lib/services";
 import { useApp } from "@/lib/store";
@@ -16,7 +16,6 @@ export function BookScreen() {
   const app = useApp();
   const { booking, setBooking, confirmBooking, user, setIntent, pushToast } = app;
   const [query, setQuery] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const service = booking.serviceId ? getService(booking.serviceId) : undefined;
   const step = booking.step;
 
@@ -122,7 +121,7 @@ export function BookScreen() {
               })}
           </div>
           <div className="mt-5">
-            <Button disabled={!booking.serviceId} onClick={() => go(2)}>Continue</Button>
+            <Button onClick={() => go(2)}>Continue</Button>
           </div>
         </div>
       )}
@@ -152,7 +151,7 @@ export function BookScreen() {
             })}
           </div>
           <div className="mt-5">
-            <Button disabled={!booking.meetingType} onClick={() => go(3)}>Continue</Button>
+            <Button onClick={() => go(3)}>Continue</Button>
           </div>
         </div>
       )}
@@ -196,7 +195,7 @@ export function BookScreen() {
             </div>
           )}
           <div className="mt-5">
-            <Button disabled={!booking.date || !booking.time} onClick={() => go(4)}>Continue</Button>
+            <Button onClick={() => go(4)}>Continue</Button>
           </div>
         </div>
       )}
@@ -205,9 +204,9 @@ export function BookScreen() {
         <div className="px-5">
           <h2 className="text-[22px] font-semibold">Your details</h2>
           <div className="mt-4 space-y-4">
-            <Field label="Full name" value={booking.name} onChange={(name) => setBooking({ name })} error={errors.name} autoComplete="name" />
-            <Field label="Email" type="email" inputMode="email" value={booking.email} onChange={(email) => setBooking({ email })} error={errors.email} autoComplete="email" />
-            <Field label="Phone" inputMode="tel" value={booking.phone} onChange={(phone) => setBooking({ phone: formatPhone(phone) })} error={errors.phone} autoComplete="tel" />
+            <Field label="Full name" value={booking.name} onChange={(name) => setBooking({ name })} autoComplete="name" />
+            <Field label="Email" type="email" inputMode="email" value={booking.email} onChange={(email) => setBooking({ email })} autoComplete="email" />
+            <Field label="Phone" inputMode="tel" value={booking.phone} onChange={(phone) => setBooking({ phone: formatPhone(phone) })} autoComplete="tel" />
             <div>
               <p className="mb-2 text-[13px] font-medium text-muted-foreground">Are you a new or returning client?</p>
               <Segmented
@@ -248,18 +247,7 @@ export function BookScreen() {
               </ul>
               <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">{privacyNote}</p>
             </div>
-            <Button
-              onClick={() => {
-                const next: Record<string, string> = {};
-                if (booking.name.trim().length < 3) next.name = "Enter your full name.";
-                if (!isEmail(booking.email)) next.email = "Enter a valid email address.";
-                if (!isPhone(booking.phone)) next.phone = "Enter a 10-digit phone number.";
-                setErrors(next);
-                if (!Object.keys(next).length) go(5);
-              }}
-            >
-              Review Appointment
-            </Button>
+            <Button onClick={() => go(5)}>Review Appointment</Button>
           </div>
         </div>
       )}
