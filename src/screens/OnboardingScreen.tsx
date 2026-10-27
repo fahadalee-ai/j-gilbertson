@@ -21,7 +21,7 @@ export function OnboardingScreen() {
 
   return (
     <div
-      className="flex h-full flex-col bg-background"
+      className="relative h-full overflow-hidden bg-[#0E0C1C]"
       onTouchStart={(event) => {
         startX.current = event.touches[0].clientX;
       }}
@@ -31,34 +31,44 @@ export function OnboardingScreen() {
         if (delta > 50 && index > 0) setIndex(index - 1);
       }}
     >
-      <div className="flex justify-end px-3 pt-2">
-        <button type="button" onClick={() => finish("/welcome")} className="min-h-11 px-3 text-[17px] font-semibold text-primary">
-          Skip
-        </button>
-      </div>
-      <div className="px-5">
-        <Photo src={slide.image} alt={slide.alt} className="h-[46vh] w-full rounded-[20px]" />
-      </div>
-      <div className="flex flex-1 flex-col px-5 pb-6 pt-6">
-        <h1 className="text-[28px] font-bold leading-tight tracking-tight">{slide.title}</h1>
-        <p className="mt-3 text-[17px] leading-relaxed text-muted-foreground">{slide.body}</p>
-        <div className="mt-5 flex gap-2" aria-label="Onboarding progress">
-          {onboarding.map((item, dot) => (
-            <span key={item.title} className={`h-2 rounded-full ${dot === index ? "w-6 bg-primary" : "w-2 bg-divider"}`} />
-          ))}
-        </div>
-        <div className="mt-auto pt-6">
-          <Button
-            onClick={() => {
-              if (last) finish("/welcome");
-              else {
-                haptic("light");
-                setIndex(index + 1);
-              }
-            }}
+      <Photo src={slide.image} alt={slide.alt} className="absolute inset-0 h-full w-full object-[center_30%]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#0E0C1C]/80 to-transparent" />
+      <div className="relative flex h-full flex-col">
+        <div className="flex justify-end px-3 pt-[max(0.5rem,env(safe-area-inset-top))]">
+          <button
+            type="button"
+            onClick={() => finish("/welcome")}
+            className="pointer-events-auto min-h-11 rounded-full bg-[#0E0C1C]/70 px-4 text-[17px] font-semibold text-white shadow-[0_1px_2px_rgba(0,0,0,0.35)] backdrop-blur-md"
           >
-            {last ? "Get Started" : "Next"}
-          </Button>
+            Skip
+          </button>
+        </div>
+        <div className="mt-auto px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+          <div className="rounded-[24px] bg-[#0E0C1C]/92 px-5 py-5 shadow-[0_16px_40px_rgba(0,0,0,0.35)]">
+            <h1 className="text-[30px] font-bold leading-[1.15] tracking-tight text-white">{slide.title}</h1>
+            <p className="mt-3 text-[17px] leading-relaxed text-white/92">{slide.body}</p>
+            <div className="mt-5 flex gap-2" aria-label="Onboarding progress">
+              {onboarding.map((item, dot) => (
+                <span
+                  key={item.title}
+                  className={`h-2 rounded-full ${dot === index ? "w-6 bg-white" : "w-2 bg-white/40"}`}
+                />
+              ))}
+            </div>
+            <div className="mt-6">
+              <Button
+                onClick={() => {
+                  if (last) finish("/welcome");
+                  else {
+                    haptic("light");
+                    setIndex(index + 1);
+                  }
+                }}
+              >
+                {last ? "Get Started" : "Next"}
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
